@@ -1,0 +1,159 @@
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+
+public class GameEngine implements Engine, KeyListener{
+
+    PhysicsEngine physicsEngine;
+    RenderEngine renderEngine;
+
+    public Figure hero;
+    boolean zPressed;
+    boolean sPressed;
+    boolean qPressed;
+    boolean dPressed;
+
+
+    public GameEngine(Figure hero){
+        this.hero = hero;
+    }
+
+    public void setReferenceToOtherEngine(PhysicsEngine physicsEngine, RenderEngine renderEngine){
+        this.physicsEngine = physicsEngine;
+        this.renderEngine = renderEngine;
+    }
+    @Override
+    public void update(int framerate) {
+
+        if (zPressed && dPressed) {
+            this.hero.setSpeed(this.hero.getMaxSpeed()/1.1);
+            this.hero.setDirection(Direction.NORTHEAST);
+        }
+
+        else if (zPressed && qPressed) {
+            this.hero.setSpeed(this.hero.getMaxSpeed()/1.1);
+            this.hero.setDirection(Direction.NORTHWEST);
+        }
+
+        else if (sPressed && dPressed) {
+            this.hero.setSpeed(this.hero.getMaxSpeed()/1.1);
+            this.hero.setDirection(Direction.SOUTHEAST);
+        }
+
+        else if (sPressed && qPressed) {
+            this.hero.setSpeed(this.hero.getMaxSpeed()/1.1);
+            this.hero.setDirection(Direction.SOUTHWEST);
+        }
+
+        else if(zPressed){
+            this.hero.setSpeed(this.hero.getMaxSpeed());
+            this.hero.setDirection(Direction.NORTH);
+        }
+
+        else if(sPressed){
+            this.hero.setSpeed(this.hero.getMaxSpeed());
+            this.hero.setDirection(Direction.SOUTH);
+        }
+
+        else if(qPressed){
+            this.hero.setSpeed(this.hero.getMaxSpeed());
+            this.hero.setDirection(Direction.WEST);
+        }
+
+        else if(dPressed){
+            this.hero.setSpeed(this.hero.getMaxSpeed());
+            this.hero.setDirection(Direction.EAST);
+        }
+
+    }
+
+
+
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_Z){
+            zPressed = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_S){
+            sPressed = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_Q){
+            qPressed = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_D){
+            dPressed = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+
+            int x=0, y=0;
+            switch(this.hero.getDirection().getValue()){
+                case 2:
+                    x = (int)(this.hero.x + this.hero.width/2-25);
+                    y = (int)(this.hero.y - 50);
+                    break;
+                case 0:
+                    x = (int)(this.hero.x + this.hero.width/2-25);
+                    y = (int)(this.hero.y + this.hero.height);
+                    break;
+                case 3:
+                    x = (int)(this.hero.x + this.hero.width);
+                    y = (int)(this.hero.y +this.hero.height/2- 25);
+                    break;
+
+                case 1:
+                    x = (int)(this.hero.x - 50);
+                    y = (int)(this.hero.y +this.hero.height/2- 25);
+                    break;
+            }
+            Bomb bomb = new Bomb(this.hero, x, y);
+            renderEngine.addToRenderList(bomb);
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_A){
+            Fireball fireball = new Fireball(this.hero, 40,40, 600);
+            renderEngine.addToRenderList(fireball);
+
+
+        }
+
+        if (e.getKeyCode()== KeyEvent.VK_H){
+            renderEngine.toggleHitboxes();
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_Z){
+            zPressed = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_S){
+            sPressed = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_Q){
+            qPressed = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_D){
+            dPressed = false;
+        }
+
+        this.hero.setSpeed(0);
+    }
+    
+}
