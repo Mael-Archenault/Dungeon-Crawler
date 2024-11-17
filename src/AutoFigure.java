@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class AutoFigure extends Figure {
     private ArrayList<Direction> directionsToLookAt;
 
     private boolean touchingHero;
+    private Figure prey;
 
     public AutoFigure(String filePath, int x, int y, double width, double height, int HBwidth, int HBheight, int HBx, int HBy) {
         super(filePath, x, y, width, height, HBwidth, HBheight, HBx, HBy);
@@ -33,7 +35,7 @@ public class AutoFigure extends Figure {
 
         this.targetIndex = 0;
         this.target = this.trajectory.get(this.targetIndex);
-        this.setMaxSpeed(400);
+        this.setMaxSpeed(200);
         this.setSpeed(this.getMaxSpeed());
         this.state = "moving";
 
@@ -53,34 +55,37 @@ public class AutoFigure extends Figure {
         double directionY = dy/length;
 
         double angle = -Math.toDegrees(Math.atan2(directionY, directionX));
-        switch((int)(angle/45)){
-            case 0:
-                this.setDirection(Direction.EAST);
-                break;
-            case 1:
-                this.setDirection(Direction.NORTHEAST);
-                break;
-            case 2:
-                this.setDirection(Direction.NORTH);
-                break;
-            case 3:
-                this.setDirection(Direction.NORTHWEST);
-                break;
-            case 4:
-                this.setDirection(Direction.WEST);
-                break;
-            case -1:
-                this.setDirection(Direction.SOUTHEAST);
-                break;
-            case -2:
-                this.setDirection(Direction.SOUTH);
-                break;
-            case -3:
-                this.setDirection(Direction.SOUTHWEST);
+        System.out.println(angle);
+
+        if (angle<-170 | angle>170){
+            this.setDirection(Direction.WEST);
+        }
+        else{
+            switch((int)(angle/45)){
+                case 0:
+                    this.setDirection(Direction.EAST);
+                    break;
+                case 1:
+                    this.setDirection(Direction.NORTHEAST);
+                    break;
+                case 2:
+                    this.setDirection(Direction.NORTH);
+                    break;
+                case 3:
+                    this.setDirection(Direction.NORTHWEST);
+                    break;
+                case -1:
+                    this.setDirection(Direction.SOUTHEAST);
+                    break;
+                case -2:
+                    this.setDirection(Direction.SOUTH);
+                    break;
+                case -3:
+                    this.setDirection(Direction.SOUTHWEST);
+            }
         }
 
         //System.out.println(this.getDirection());
-
         int i = 1;
         boolean flag = true;
         while(!isMovingPossible(framerate, spriteList, figureList)&&flag){
@@ -104,8 +109,27 @@ public class AutoFigure extends Figure {
         int ySave = this.y;
         this.moveIfPossible(framerate, spriteList, figureList);
         //System.out.println("dx :"+(this.x-xSave) + " dy : "+(this.y-ySave));
-        if (this.state.equals("moving")){
+        if (this.state.equals("moving") | this.state.equals("chasing")){
+
+            if (this.state.equals("chasing")){
+
+                double distance = this.target.distance(new Point((int)(this.x+this.width/2), (int)(this.y+this.height/2)));
+
+                if (distance>600){
+                    this.setState("moving");
+                }
+                else {
+                    Point targetPosition = new Point((int)(this.prey.getXPosition()+this.prey.getWidth()/2), (int)(this.prey.getYPosition()+ this.prey.getHeight()/2));
+                    this.target = targetPosition ;
+                }
+
+                //System.out.println(distance);
+
+            }
+
             this.computeShortestDirection(framerate, spriteList, figureList);
+
+
             if (Math.abs(this.x+this.width/2-target.x)<10 && Math.abs(this.y+this.height/2 -target.y)<10) {
                 this.setSpeed(0);
                 this.state = "waiting";
@@ -116,6 +140,8 @@ public class AutoFigure extends Figure {
                 Collections.shuffle(this.directionsToLookAt);
 
             }
+
+
         }
 
         if (this.state.equals("waiting")){
@@ -189,7 +215,7 @@ public class AutoFigure extends Figure {
                     this.y = ySave;
                     if (figure instanceof Figure){
                         this.touchingHero = true;
-                        System.out.println("test");
+                       // System.out.println("test");
                     }
                     return false;
                 }
@@ -243,6 +269,12 @@ public class AutoFigure extends Figure {
     public void setNewTarget(Point p){
         this.target = p;
     }
+
+    public void setNewPrey(Figure prey){
+        this.prey = prey;
+    }
+
+
 
 
 

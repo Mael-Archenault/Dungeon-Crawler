@@ -55,9 +55,9 @@ public class PhysicsEngine implements Engine{
                 if (figure instanceof AutoFigure){
                     AutoFigure fig = (AutoFigure)figure;
                     if (fig.isViewing(gameEngine.hero) && fig.getState()!="chasing"){
-                        fig.setState("moving");
+                        fig.setState("chasing");
                         fig.setSpeed(fig.getMaxSpeed());
-                        fig.setNewTarget(new Point(gameEngine.hero.getXPosition(), gameEngine.hero.getYPosition()));
+                        fig.setNewPrey(gameEngine.hero);
                     }
                 }
                 figure.update(framerate, environment, figureList);
