@@ -14,8 +14,8 @@ public class RenderEngine extends JPanel implements Engine{
     private double zoomSpeed;
     private double targetZoom;
 
-    double cameraX = 0;
-    double cameraY = 0;
+    double cameraX = 300;
+    double cameraY = 100;
 
     double windowWidth;
     double windowHeight;
@@ -28,6 +28,7 @@ public class RenderEngine extends JPanel implements Engine{
     public RenderEngine(int windowWidth, int windowHeight){
         setPreferredSize(new Dimension(windowWidth, windowHeight));
         setFocusable(true);
+
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         renderList = new ArrayList<Displayable>();
@@ -36,6 +37,7 @@ public class RenderEngine extends JPanel implements Engine{
     public void setReferenceToOtherEngine(PhysicsEngine physicsEngine, GameEngine gameEngine){
         this.physicsEngine = physicsEngine;
         this.gameEngine = gameEngine;
+        this.centerCameraOnPlayer();
     }
 
     public void addToRenderList(Displayable displayable){
@@ -68,9 +70,10 @@ public class RenderEngine extends JPanel implements Engine{
     public void update(int framerate) {
 
 
-
+        //System.out.println(gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom) + cameraX);
         double cameraXSpeed = -Math.pow(gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom) + cameraX,3)*zoom/(500);
         double cameraYSpeed = -Math.pow(gameEngine.hero.getYPosition()-this.windowHeight/(2*zoom) + cameraY,3)*zoom/(2000);
+        //System.out.println(cameraXSpeed + " " + cameraYSpeed);
         this.cameraX += cameraXSpeed/framerate;
         this.cameraY += cameraYSpeed/framerate;
 
@@ -91,6 +94,7 @@ public class RenderEngine extends JPanel implements Engine{
 
             }
         }
+
         this.repaint();
     }
 
@@ -100,5 +104,14 @@ public class RenderEngine extends JPanel implements Engine{
     }
 
     public void toggleHitboxes(){this.displayHitboxes = !this.displayHitboxes;}
+    public void setTargetZoom(double target){
+        this.targetZoom = target;
+    }
+
+    public void centerCameraOnPlayer(){
+        this.cameraX = -(this.gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom));
+        this.cameraY = this.gameEngine.hero.getYPosition()-this.windowHeight/(2*zoom);
+        //System.out.println(cameraX + " " + cameraY);
+    }
     
 }

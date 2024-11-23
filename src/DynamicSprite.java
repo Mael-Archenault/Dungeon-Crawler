@@ -9,6 +9,7 @@ public class DynamicSprite extends SolidSprite{
 
 
 
+
     public DynamicSprite(String filePath, int x, int y, double width, double height, int HBwidth, int HBheight, int HBx, int HBy){
         super(filePath, x, y,width, height, HBwidth, HBheight, HBx, HBy);
 
@@ -23,6 +24,7 @@ public class DynamicSprite extends SolidSprite{
         if (flag) {
             this.move(framerate);
         }
+
 
 
     }

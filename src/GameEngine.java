@@ -1,5 +1,6 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 
 
 public class GameEngine implements Engine, KeyListener{
@@ -16,6 +17,7 @@ public class GameEngine implements Engine, KeyListener{
 
     public GameEngine(Figure hero){
         this.hero = hero;
+
     }
 
     public void setReferenceToOtherEngine(PhysicsEngine physicsEngine, RenderEngine renderEngine){
@@ -79,7 +81,6 @@ public class GameEngine implements Engine, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-
         if (e.getKeyCode() == KeyEvent.VK_Z){
             zPressed = true;
         }
@@ -96,7 +97,7 @@ public class GameEngine implements Engine, KeyListener{
             dPressed = true;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+        if (e.getKeyCode() == KeyEvent.VK_K){
 
             int x=0, y=0;
             switch(this.hero.getDirection().getValue()){
@@ -118,19 +119,35 @@ public class GameEngine implements Engine, KeyListener{
                     y = (int)(this.hero.y +this.hero.height/2- 25);
                     break;
             }
-            Bomb bomb = new Bomb(this.hero, x, y);
-            renderEngine.addToRenderList(bomb);
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_A){
-            Fireball fireball = new Fireball(this.hero, 40,40, 600);
-            renderEngine.addToRenderList(fireball);
-
+            if (hero.isBombDropPossible()){
+                Bomb bomb = new Bomb(this.hero, x, y);
+                renderEngine.addToRenderList(bomb);
+                hero.resetLastBombDropTime();
+            }
 
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_J){
+            if (hero.isFireballLaunchPossible()){
+                Fireball fireball = new Fireball(this.hero, 40,40, 600);
+                renderEngine.addToRenderList(fireball);
+                hero.resetLastFireballLaunchTime();
+            }
+
+
+        }
+        if (e.getKeyCode()== KeyEvent.VK_SPACE){
+            if (hero.isSlashingPossible()){
+                hero.slash();
+            }
+
+        }
         if (e.getKeyCode()== KeyEvent.VK_H){
             renderEngine.toggleHitboxes();
+        }
+
+        if (e.getKeyCode()== KeyEvent.VK_M){
+            renderEngine.setTargetZoom(0.1);
         }
 
     }

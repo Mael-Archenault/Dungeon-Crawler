@@ -75,11 +75,11 @@ public class Fireball extends DynamicSprite{
 
         }
 
-        if(!this.state.equals("exploded")&&this.timeCount>=this.explosionTime){
+        if(this.state.equals("exploding")&&this.timeCount>=this.explosionTime){
             this.state = "exploded";
 
         }
-        System.out.println(this.timeCount);
+
 
 
         return flag;

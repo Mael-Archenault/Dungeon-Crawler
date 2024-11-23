@@ -66,7 +66,6 @@ public class Bomb extends SolidSprite{
         if (this.timeCount >= this.lifetime && !this.isExploding()){
             this.trigger();
             this.state = "exploding";
-            System.out.println("test1 : "+state);
         }
 
         else if (this.isExploding()){
@@ -109,7 +108,6 @@ public class Bomb extends SolidSprite{
 
     public void animationUpdate(){
         int currentAnimationIndex = Math.min(12,(int)(this.timeCount*this.animationFramerate));
-        System.out.println("test");
         if (currentAnimationIndex!=this.animationIndex){
 
             this.animationIndex = currentAnimationIndex;

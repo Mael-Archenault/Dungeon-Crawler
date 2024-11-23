@@ -55,10 +55,15 @@ public class PhysicsEngine implements Engine{
                 if (figure instanceof AutoFigure){
                     AutoFigure fig = (AutoFigure)figure;
                     if (fig.isViewing(gameEngine.hero) && fig.getState()!="chasing"){
+                        System.out.println("Viewing");
                         fig.setState("chasing");
                         fig.setSpeed(fig.getMaxSpeed());
                         fig.setNewPrey(gameEngine.hero);
                     }
+                    if (gameEngine.hero.isSlashing()&&gameEngine.hero.isInRange(fig)){
+                        fig.setDamage(10);
+                    }
+
                 }
                 figure.update(framerate, environment, figureList);
 
@@ -124,6 +129,7 @@ public class PhysicsEngine implements Engine{
             }
             if (!toRemove.isEmpty()){
                 for (Fireball ball: toRemove){
+                    System.out.println("remove the ball");
                     Fireball.fireballList.remove(ball);
                     renderEngine.renderList.remove(ball);
                 }
