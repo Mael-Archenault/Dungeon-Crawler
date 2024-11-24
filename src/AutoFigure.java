@@ -1,16 +1,17 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.sql.SQLSyntaxErrorException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 public class AutoFigure extends Figure {
-    private ArrayList<Point> trajectory;
+    protected ArrayList<Point> trajectory;
     private double waitingTime;
-    private Point target;
+    protected Point target;
     private String state;
-    private int targetIndex;
+    protected int targetIndex;
     private int directionExplored;
 
     private double visionWidth;
@@ -21,29 +22,27 @@ public class AutoFigure extends Figure {
     private Rectangle2D visionField = new Rectangle2D.Double(0, 0, visionWidth, visionDeepness);
 
     private ArrayList<Direction> directionsToLookAt;
-
-    private boolean touchingHero;
     private Figure prey;
 
 
     public AutoFigure(String filePath, int x, int y, double width, double height, int HBwidth, int HBheight, int HBx, int HBy) {
         super(filePath, x, y, width, height, HBwidth, HBheight, HBx, HBy);
-        this.trajectory = new ArrayList<Point>();
-        this.trajectory.add(new Point(700,300));
-        this.trajectory.add(new Point(800,600));
-
+        this.trajectory = new ArrayList<>();
+        this.trajectory.add(new Point(x, y));
+        this.target = this.trajectory.get(0);
         this.directionsToLookAt = new ArrayList<>(Arrays.asList(Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH));
 
         this.targetIndex = 0;
-        this.target = this.trajectory.get(this.targetIndex);
-        this.setMaxSpeed(200);
-        this.setSpeed(this.getMaxSpeed());
+        this.setMaxSpeed(300);
+        this.setSpeed(this.getMaxSpeed()*2/3);
         this.state = "moving";
+
+        this.slashStrength = 10;
 
         this.waitingTime = 3;
 
         this.visionWidth = 200;
-        this.visionDeepness = 600;
+        this.visionDeepness = 400;
     }
 
     public void computeShortestDirection(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
@@ -106,25 +105,48 @@ public class AutoFigure extends Figure {
     public void update(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
         this.time+=1/(double)framerate;
         if (!this.dead){
-            this.updateAnimation(framerate);
-            this.moveIfPossible(framerate, spriteList, figureList);
-            if (this.state.equals("moving") | this.state.equals("chasing")){
 
-                if (this.state.equals("chasing")){
+
+            if (this.state.equals("chasing")){
+                this.computeShortestDirection(framerate, spriteList, figureList);
+                if (this.prey.isDead()){
+                    this.state = "moving";
+                    this.setSpeed(this.getMaxSpeed()*2/3);
+                }
+                else{
                     this.target = new Point((int)(this.prey.getXPosition()+this.prey.getWidth()/2), (int)(this.prey.getYPosition()+ this.prey.getHeight()/2));
                     double distance = this.target.distance(new Point((int)(this.x+this.width/2), (int)(this.y+this.height/2)));
 
                     if (distance>600){
                         this.setState("moving");
                     }
+                    if (this.slashing){
+                        if ((this.time - this.lastSlashTime) >this.slashingDuration){
+                            this.slashing = false;
+                        }
+                    }
 
-                    //System.out.println(distance);
+                    else {
 
+                        if (this.isInRange(this.prey) && isSlashingPossible()) {
+                            this.setSpeed(0);
+                            this.slash(figureList);
+                        }
+                        else {
+                            if (!this.isInRange(this.prey)){
+                                this.setSpeed(getMaxSpeed());
+                            }
+                            this.moveIfPossible(framerate, spriteList, figureList);
+                            updateAnimation(framerate);
+                        }
+                    }
                 }
 
+            }
+
+            if (this.state.equals("moving")){
                 this.computeShortestDirection(framerate, spriteList, figureList);
-
-
+                this.moveIfPossible(framerate, spriteList, figureList);
                 if (Math.abs(this.x+this.width/2-target.x)<10 && Math.abs(this.y+this.height/2 -target.y)<10) {
                     this.setSpeed(0);
                     this.state = "waiting";
@@ -133,33 +155,34 @@ public class AutoFigure extends Figure {
                     this.target = this.trajectory.get(this.targetIndex);
                     this.directionExplored = 0;
                     Collections.shuffle(this.directionsToLookAt);
+                }
+                updateAnimation(framerate);
+            }
 
+
+
+
+
+            if (this.state.equals("waiting")){
+                double timeWaited = this.time- this.waitStartTime;
+
+                if (this.directionExplored>3 && timeWaited>this.waitingTime/(this.directionsToLookAt.size())){
+                    this.state = "moving";
+                    this.setSpeed(this.getMaxSpeed()*2/3);
                 }
 
+                else if (timeWaited > this.waitingTime/(this.directionsToLookAt.size())){
+                    this.setDirection(this.directionsToLookAt.get(this.directionExplored));
+                    this.waitStartTime = this.time;
+                    this.directionExplored ++;
 
+                }
+                this.updateAnimation(framerate);
             }
+
 
         }
 
-        if (this.state.equals("waiting")){
-
-            double timeWaited = this.time- this.waitStartTime;
-
-            if (this.directionExplored>3 && timeWaited>this.waitingTime/(this.directionsToLookAt.size())){
-                this.state = "moving";
-                this.setSpeed(this.getMaxSpeed());
-            }
-
-            else if (timeWaited > this.waitingTime/(this.directionsToLookAt.size())){
-                this.setDirection(this.directionsToLookAt.get(this.directionExplored));
-                this.waitStartTime = this.time;
-                this.directionExplored ++;
-
-            }
-
-
-
-        }
 
 
 
@@ -194,8 +217,6 @@ public class AutoFigure extends Figure {
         int xSave = this.x;
         int ySave = this.y;
 
-        this.touchingHero = false;
-
         this.move(framerate);
         for (Sprite sprite : spriteList){
             if (sprite instanceof SolidSprite){
@@ -213,10 +234,6 @@ public class AutoFigure extends Figure {
                 if (this.intersect((SolidSprite)figure)){
                     this.x = xSave;
                     this.y = ySave;
-                    if (figure instanceof Figure){
-                        this.touchingHero = true;
-                       // System.out.println("test");
-                    }
                     return false;
                 }
             }
@@ -273,6 +290,16 @@ public class AutoFigure extends Figure {
 
     public void setNewPrey(Figure prey){
         this.prey = prey;
+    }
+
+    @Override
+    public void setDeathImage(){
+        try {
+            this.image = ImageIO.read(new File("./img/deadVillain.png"));
+            this.HBactive = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

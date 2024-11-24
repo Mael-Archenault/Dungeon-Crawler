@@ -22,10 +22,6 @@ public class PhysicsEngine implements Engine{
     public void setReferenceToOtherEngine(GameEngine gameEngine, RenderEngine renderEngine){
         this.gameEngine = gameEngine;
         this.renderEngine = renderEngine;
-
-        ZoomBox a = new ZoomBox(300,600,1000,1000);
-        renderEngine.addToRenderList(a);
-        zoomBoxList.add(a);
     }
 
     public void addToEnvironmentList(Sprite sprite){
@@ -52,18 +48,18 @@ public class PhysicsEngine implements Engine{
 
         if (!figureList.isEmpty()){
             for(Figure figure : figureList){
+//                if (figure.isDead()){
+//                    renderEngine.renderList.remove(figure);
+//                    figure.setHBinactive();
+//                }
                 if (figure instanceof AutoFigure){
                     AutoFigure fig = (AutoFigure)figure;
-                    if (fig.isViewing(gameEngine.hero) && fig.getState()!="chasing"){
+                    if (fig.isViewing(gameEngine.hero) && fig.getState()!="chasing" && !gameEngine.hero.isDead()){
                         System.out.println("Viewing");
                         fig.setState("chasing");
                         fig.setSpeed(fig.getMaxSpeed());
                         fig.setNewPrey(gameEngine.hero);
                     }
-                    if (gameEngine.hero.isSlashing()&&gameEngine.hero.isInRange(fig)){
-                        fig.setDamage(10);
-                    }
-
                 }
                 figure.update(framerate, environment, figureList);
 
@@ -83,9 +79,18 @@ public class PhysicsEngine implements Engine{
                         if (!figureList.isEmpty()) {
                             for (Figure figure : figureList) {
                                 if (bomb.intersect(figure) && !bomb.damagedFigures.contains(figure)) {
-                                    figure.setDamage(50);
+                                    figure.setDamage(100);
                                     bomb.addToDamagedFigures(figure);
                                 }
+                            }
+                            for (Sprite sprite : environment) {
+                                if (sprite instanceof SolidSprite){
+                                    SolidSprite solid = (SolidSprite)sprite;
+                                    if (bomb.intersect(solid)) {
+                                        solid.destroy();
+                                    }
+                                }
+
                             }
                         }
                         break;
@@ -117,6 +122,11 @@ public class PhysicsEngine implements Engine{
                                 if (ball.intersect(figure)&&!ball.damagedFigures.contains(figure)) {
                                     figure.setDamage(ball.getDamage());
                                     ball.addToDamagedFigures(figure);
+                                    if (figure instanceof AutoFigure){
+                                        AutoFigure auto = (AutoFigure)figure;
+                                        auto.setState("chasing");
+                                        auto.setNewPrey(gameEngine.hero);
+                                    }
                                 }
                             }
                         }
@@ -144,6 +154,10 @@ public class PhysicsEngine implements Engine{
             }
         }
         
+    }
+
+    public ArrayList<Figure> getFigureList(){
+        return this.figureList;
     }
     
 }

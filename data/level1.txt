@@ -1,17 +1,19 @@
-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-T                                                   T
-T     TTTTTTTTT                                     T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-T                                                   T
-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTT     R TTTTTT
+TTTTTT  T    TTTTTT
+TTTTTT       TTTTTT
+TTTT    R    TTTTTT
+TTTTTT     T TTTTTT
+TTTTTT    TT TTTTTT
+TTTTTT  R    TTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT
+TTTTTTTTTTTTTTTTTTT

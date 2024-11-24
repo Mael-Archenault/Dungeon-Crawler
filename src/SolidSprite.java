@@ -1,4 +1,6 @@
+import javax.imageio.ImageIO;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.HashMap;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -12,14 +14,7 @@ public class SolidSprite extends Sprite {
 
     Rectangle2D hitbox;
 
-    int HBPoint1x;
-    int HBPoint1y;
-    int HBPoint2x;
-    int HBPoint2y;
-    int HBPoint3x;
-    int HBPoint3y;
-    int HBPoint4x;
-    int HBPoint4y;
+    boolean HBactive = true;
 
     public SolidSprite(String filePath, int x, int y,double width, double height, int HBwidth, int HBheight, int HBx, int HBy) {
         super(filePath, x, y, width, height);
@@ -40,8 +35,14 @@ public class SolidSprite extends Sprite {
     }
 
     public boolean intersect(SolidSprite other){
-        Rectangle2D otherHitbox = other.getHitbox();
-        return this.hitbox.intersects(otherHitbox);
+        if (this.HBactive && other.isHBactive()){
+            Rectangle2D otherHitbox = other.getHitbox();
+            return this.hitbox.intersects(otherHitbox);
+        }
+        else{
+            return false;
+        }
+
     }
     public void updateHitbox(double x, double y, double width, double height){
         this.hitbox.setRect(x, y, width, height);
@@ -71,5 +72,20 @@ public class SolidSprite extends Sprite {
         return this.x + " " + this.y + " " + this.HBwidth + " " + this.HBheight;
     }
 
+    public void destroy() {
+        try {
+            this.image = ImageIO.read(new File("./img/ground.png"));
+            this.HBactive = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public boolean isHBactive(){
+        return this.HBactive;
+    }
+
+    public void setHBinactive(){
+        this.HBactive = false;
+    }
 }

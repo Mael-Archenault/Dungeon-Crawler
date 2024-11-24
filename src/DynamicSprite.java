@@ -6,14 +6,10 @@ public class DynamicSprite extends SolidSprite{
     protected Direction direction = Direction.SOUTH;
     private double maxSpeed;
 
-
-
-
-
     public DynamicSprite(String filePath, int x, int y, double width, double height, int HBwidth, int HBheight, int HBx, int HBy){
         super(filePath, x, y,width, height, HBwidth, HBheight, HBx, HBy);
 
-        this.maxSpeed = 400;
+        this.maxSpeed = 600;
         this.speed = 0;
 
     }

@@ -35,7 +35,7 @@ public class Bomb extends SolidSprite{
         Bomb.bombList.add(this);
         this.lifetime = 3;
         this.timeCount = 0;
-        this.explosionDuration = 1;
+        this.explosionDuration = 0.5;
         this.animationFramerate = 13/this.explosionDuration;
         this.animationIndex = 0;
 

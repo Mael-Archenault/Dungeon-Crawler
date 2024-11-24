@@ -14,6 +14,8 @@ public class GameEngine implements Engine, KeyListener{
     boolean qPressed;
     boolean dPressed;
 
+    public boolean earlyExit = false;
+
 
     public GameEngine(Figure hero){
         this.hero = hero;
@@ -129,7 +131,7 @@ public class GameEngine implements Engine, KeyListener{
 
         if (e.getKeyCode() == KeyEvent.VK_J){
             if (hero.isFireballLaunchPossible()){
-                Fireball fireball = new Fireball(this.hero, 40,40, 600);
+                Fireball fireball = new Fireball(this.hero, 40,40, 800);
                 renderEngine.addToRenderList(fireball);
                 hero.resetLastFireballLaunchTime();
             }
@@ -138,8 +140,13 @@ public class GameEngine implements Engine, KeyListener{
         }
         if (e.getKeyCode()== KeyEvent.VK_SPACE){
             if (hero.isSlashingPossible()){
-                hero.slash();
+                hero.slash(physicsEngine.getFigureList());
             }
+
+        }
+        if (e.getKeyCode()== KeyEvent.VK_ESCAPE){
+            this.earlyExit = true;
+            System.out.println("Early Exit : " + earlyExit);
 
         }
         if (e.getKeyCode()== KeyEvent.VK_H){

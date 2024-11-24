@@ -31,6 +31,7 @@ public class RenderEngine extends JPanel implements Engine{
 
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
+        System.out.println(windowWidth + " " + windowHeight);
         renderList = new ArrayList<Displayable>();
     }
 
@@ -69,15 +70,11 @@ public class RenderEngine extends JPanel implements Engine{
     @Override
     public void update(int framerate) {
 
+        double cameraXSpeed = -Math.pow(gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom)+ this.gameEngine.hero.getWidth()/2 + cameraX,3)*zoom/(500);
+        double cameraYSpeed = -Math.pow(gameEngine.hero.getYPosition()-this.windowHeight/(2*zoom)+ this.gameEngine.hero.getHeight()/2 + cameraY,3)*zoom/(2000);
 
-        //System.out.println(gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom) + cameraX);
-        double cameraXSpeed = -Math.pow(gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom) + cameraX,3)*zoom/(500);
-        double cameraYSpeed = -Math.pow(gameEngine.hero.getYPosition()-this.windowHeight/(2*zoom) + cameraY,3)*zoom/(2000);
-        //System.out.println(cameraXSpeed + " " + cameraYSpeed);
         this.cameraX += cameraXSpeed/framerate;
         this.cameraY += cameraYSpeed/framerate;
-
-
 
         if (!ZoomBox.zoomBoxeList.isEmpty()){
             for (ZoomBox box : ZoomBox.zoomBoxeList){
@@ -109,9 +106,10 @@ public class RenderEngine extends JPanel implements Engine{
     }
 
     public void centerCameraOnPlayer(){
-        this.cameraX = -(this.gameEngine.hero.getXPosition()-this.windowWidth/(2*zoom));
-        this.cameraY = this.gameEngine.hero.getYPosition()-this.windowHeight/(2*zoom);
-        //System.out.println(cameraX + " " + cameraY);
+
+        this.cameraX = -this.gameEngine.hero.getXPosition() + this.windowWidth/(2*zoom) - this.gameEngine.hero.getWidth()/2;
+        this.cameraY = -this.gameEngine.hero.getYPosition() + this.windowHeight/(2*zoom)- this.gameEngine.hero.getHeight()/2;
+
     }
     
 }
