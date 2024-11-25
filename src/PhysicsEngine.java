@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.ArrayList;
 
 public class PhysicsEngine implements Engine{
@@ -7,55 +6,45 @@ public class PhysicsEngine implements Engine{
     RenderEngine renderEngine;
     
     private ArrayList<Sprite> environment;
-    private ArrayList<Figure> figureList;
-    private ArrayList<DynamicSprite> movingSpriteList;
-    private ArrayList<ZoomBox> zoomBoxList;
+    private final ArrayList<Figure> figureList;
 
 
     public PhysicsEngine(){
-        figureList = new ArrayList<Figure>();
-        movingSpriteList = new ArrayList<DynamicSprite>();
-        zoomBoxList = new ArrayList<>();
+        figureList = new ArrayList<>();
 
     }
+
+    // Getters //
+
+    public ArrayList<Figure> getFigureList(){
+        return this.figureList;
+    }
+
+    // Setters //
 
     public void setReferenceToOtherEngine(GameEngine gameEngine, RenderEngine renderEngine){
         this.gameEngine = gameEngine;
         this.renderEngine = renderEngine;
     }
 
-    public void addToEnvironmentList(Sprite sprite){
-        environment.add(sprite);
+    public void setEnvironment(ArrayList<Sprite> environment) {
+        this.environment = environment;
     }
 
     public void addToFigureList(Figure figure){
         figureList.add(figure);
     }
 
-    public void addToMovingSpriteList(DynamicSprite sprite){
-
-        movingSpriteList.add(sprite);
-    }
-
-    public void setEnvironment(ArrayList<Sprite> environment) {
-        this.environment = environment;
-    }
-
-
+    // Update for Game Loop //
 
     @Override
     public void update(int framerate) {
-
+        // Updating each figure
         if (!figureList.isEmpty()){
             for(Figure figure : figureList){
-//                if (figure.isDead()){
-//                    renderEngine.renderList.remove(figure);
-//                    figure.setHBinactive();
-//                }
                 if (figure instanceof AutoFigure){
                     AutoFigure fig = (AutoFigure)figure;
-                    if (fig.isViewing(gameEngine.hero) && fig.getState()!="chasing" && !gameEngine.hero.isDead()){
-                        System.out.println("Viewing");
+                    if (fig.isViewing(gameEngine.hero) && !fig.getState().equals("chasing") && !gameEngine.hero.isDead()){
                         fig.setState("chasing");
                         fig.setSpeed(fig.getMaxSpeed());
                         fig.setNewPrey(gameEngine.hero);
@@ -65,9 +54,9 @@ public class PhysicsEngine implements Engine{
 
             }
         }
-
+        // Updating each Bomb
         if (!Bomb.bombList.isEmpty()){
-            ArrayList<Bomb> toRemove = new ArrayList<Bomb>();
+            ArrayList<Bomb> toRemove = new ArrayList<>();
 
             for (Bomb bomb : Bomb.bombList){
                 bomb.update(framerate);
@@ -100,6 +89,7 @@ public class PhysicsEngine implements Engine{
                 }
 
             }
+            // Removing inactive Bombs
             if (!toRemove.isEmpty()){
                 for (Bomb bomb: toRemove){
                     Bomb.bombList.remove(bomb);
@@ -107,8 +97,9 @@ public class PhysicsEngine implements Engine{
                 }
             }
         }
+        // Updating each Fireball
         if (!Fireball.fireballList.isEmpty()){
-            ArrayList<Fireball> toRemove = new ArrayList<Fireball>();
+            ArrayList<Fireball> toRemove = new ArrayList<>();
 
             for (Fireball ball : Fireball.fireballList){
                 ball.moveIfPossible(framerate, environment, figureList);
@@ -120,7 +111,7 @@ public class PhysicsEngine implements Engine{
                         if (!figureList.isEmpty()) {
                             for (Figure figure : figureList) {
                                 if (ball.intersect(figure)&&!ball.damagedFigures.contains(figure)) {
-                                    figure.setDamage(ball.getDamage());
+                                    figure.setDamage(ball.getInflictedDamage());
                                     ball.addToDamagedFigures(figure);
                                     if (figure instanceof AutoFigure){
                                         AutoFigure auto = (AutoFigure)figure;
@@ -137,27 +128,22 @@ public class PhysicsEngine implements Engine{
                 }
 
             }
+            // Removing inactive Fireballs
             if (!toRemove.isEmpty()){
                 for (Fireball ball: toRemove){
-                    System.out.println("remove the ball");
                     Fireball.fireballList.remove(ball);
                     renderEngine.renderList.remove(ball);
                 }
             }
         }
 
+        // Updating each ZoombBox
         if (!ZoomBox.zoomBoxeList.isEmpty()){
             for (ZoomBox box : ZoomBox.zoomBoxeList){
-
                 box.intersect(gameEngine.hero);
-
             }
         }
         
     }
 
-    public ArrayList<Figure> getFigureList(){
-        return this.figureList;
-    }
-    
 }

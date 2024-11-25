@@ -137,7 +137,7 @@ public class AutoFigure extends Figure {
                                 this.setSpeed(getMaxSpeed());
                             }
                             this.moveIfPossible(framerate, spriteList, figureList);
-                            updateAnimation(framerate);
+                            updateAnimation();
                         }
                     }
                 }
@@ -156,7 +156,7 @@ public class AutoFigure extends Figure {
                     this.directionExplored = 0;
                     Collections.shuffle(this.directionsToLookAt);
                 }
-                updateAnimation(framerate);
+                updateAnimation();
             }
 
 
@@ -177,7 +177,7 @@ public class AutoFigure extends Figure {
                     this.directionExplored ++;
 
                 }
-                this.updateAnimation(framerate);
+                this.updateAnimation();
             }
 
 
@@ -211,55 +211,55 @@ public class AutoFigure extends Figure {
         }
 
     }
-    @Override
-    public boolean isMovingPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
-
-        int xSave = this.x;
-        int ySave = this.y;
-
-        this.move(framerate);
-        for (Sprite sprite : spriteList){
-            if (sprite instanceof SolidSprite){
-                if (this.intersect((SolidSprite)sprite)){
-                    this.x = xSave;
-                    this.y = ySave;
-                    return false;
-                }
-            }
-
-        }
-
-        for (Figure figure : figureList){
-            if (figure instanceof SolidSprite && figure!=this){
-                if (this.intersect((SolidSprite)figure)){
-                    this.x = xSave;
-                    this.y = ySave;
-                    return false;
-                }
-            }
-
-        }
-
-        if (!Bomb.bombList.isEmpty()) {
-            for (Bomb bomb : Bomb.bombList) {
-                if (this.intersect(bomb) && bomb.getState().equals("idle")) {
-                    this.x = xSave;
-                    this.y = ySave;
-                    return false;
-                }
-
-            }
-
-        }
-        this.x = xSave;
-        this.y = ySave;
-
-        this.updateHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
-
-        return true;
-
-
-    }
+//    @Override
+//    public boolean isMovingPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
+//
+//        int xSave = this.x;
+//        int ySave = this.y;
+//
+//        this.move(framerate);
+//        for (Sprite sprite : spriteList){
+//            if (sprite instanceof SolidSprite){
+//                if (this.intersect((SolidSprite)sprite)){
+//                    this.x = xSave;
+//                    this.y = ySave;
+//                    return false;
+//                }
+//            }
+//
+//        }
+//
+//        for (Figure figure : figureList){
+//            if (figure instanceof SolidSprite && figure!=this){
+//                if (this.intersect((SolidSprite)figure)){
+//                    this.x = xSave;
+//                    this.y = ySave;
+//                    return false;
+//                }
+//            }
+//
+//        }
+//
+//        if (!Bomb.bombList.isEmpty()) {
+//            for (Bomb bomb : Bomb.bombList) {
+//                if (this.intersect(bomb) && bomb.getState().equals("idle")) {
+//                    this.x = xSave;
+//                    this.y = ySave;
+//                    return false;
+//                }
+//
+//            }
+//
+//        }
+//        this.x = xSave;
+//        this.y = ySave;
+//
+//        this.setHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
+//
+//        return true;
+//
+//
+//    }
 
     @Override
     public void drawHitbox(Graphics g, double cameraX, double cameraY, double zoom) {

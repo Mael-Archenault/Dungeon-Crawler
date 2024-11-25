@@ -5,10 +5,12 @@ import java.io.FileReader;
 
 public class Playground {
     private ArrayList<Sprite> environment;
+
     private int tileWidth;
+    private int tileHeight;
+
     public char[][] textFile = new char[16][];
-    
-    
+
     public Playground(String levelPath){
 
         try {
@@ -16,63 +18,46 @@ public class Playground {
 
             for (int i = 0; i < 16; i++){
                 String line = bufferedReader.readLine();
-                
                 textFile[i] = line.toCharArray();
-                
                 }
 
             bufferedReader.close();
 
             } 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        catch (Exception ignored) {}
 
-    public ArrayList<SolidSprite> getSolidSpriteList(){
-        ArrayList<SolidSprite> res = new ArrayList<SolidSprite>();
-        for (Sprite sprite : environment){
-            if (sprite instanceof SolidSprite){
-                res.add((SolidSprite) sprite);
-            }
-        }
-        return res;
+        this.setTileSize(200,200);
+        this.setMap();
     }
-
+    // Getters //
     public ArrayList<Sprite> getSpriteList(){
         return environment;
     }
 
-    public void setTileWidth(int width){
+    // Setters //
+    public void setTileSize(int width, int height){
         this.tileWidth = width;
-        this.setMap();
+        this.tileHeight = height;
     }
 
     public void setMap(){
-        System.out.println("setting the map");
-        environment = new ArrayList<Sprite>();
+        environment = new ArrayList<>();
         Sprite readTile;
-
 
         for (int i = 0; i < textFile.length; i++) {
             for (int j = 0; j < textFile[i].length; j++) {
-                //System.out.println(i + " " + j + " " + textFile.length + " " + textFile[i].length);
                 if (textFile[i][j] == 'T') {
-                    readTile = new SolidSprite("./img/tree.png", j*tileWidth, i*tileWidth, tileWidth, tileWidth, tileWidth, tileWidth, 0,0);
+                    readTile = new SolidSprite("./img/tree.png", j*tileWidth, i*tileHeight, tileWidth, tileHeight, tileWidth, tileHeight, 0,0);
                 }
 
                 else if (textFile[i][j] == 'R') {
-                    readTile = new SolidSprite("./img/rock.png", j*tileWidth, i*tileWidth, tileWidth, tileWidth, tileWidth, tileWidth, 0,0);
+                    readTile = new SolidSprite("./img/rock.png", j*tileWidth, i*tileHeight, tileWidth, tileHeight, tileWidth, tileHeight, 0,0);
                 }
 
                 else {
-                    readTile = new Sprite("./img/grass.png", j*tileWidth, i*tileWidth, tileWidth, tileWidth);
+                    readTile = new Sprite("./img/grass.png", j*tileWidth, i*tileHeight, tileWidth, tileHeight);
                 }
-
-                environment.add(readTile); //
-                readTile.height = tileWidth;
-                readTile.width = tileWidth;
-                //System.out.println("Element placé : "+ textFile[i][j]+" " + readTile.x + " " + readTile.y);
+                environment.add(readTile);
 
             }
         }

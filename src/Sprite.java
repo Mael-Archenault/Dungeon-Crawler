@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 public class Sprite implements Displayable{
@@ -10,45 +9,49 @@ public class Sprite implements Displayable{
     protected BufferedImage image;
     protected int x;
     protected int y;
-    protected int angle = 0;
-
-
 
     public Sprite(String filePath, int x, int y, double width, double height){
        
         try {
-            
-            this.image = ImageIO.read(new File(filePath));
+            if (filePath== null){
+                this.image = null;
+            }
+            else {
+                this.image = ImageIO.read(new File(filePath));
+            }
             this.height = height;
             this.width = width;
-
-            
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        catch (Exception ignored) {}
+
         this.x = x;
         this.y = y;
 
 
     }
 
-    public void setPosition(int x, int y){
-        this.x = x;
-        this.y = y;
-    }
-
+    //  Getters //
     public int getXPosition(){
         return this.x;
     }
     public int getYPosition(){
         return this.y;
     }
+    public double getHeight(){
+        return this.height;
+    }
+    public double getWidth(){
+        return this.width;
+    }
 
+    //  Setters //
     public void rescale(double scale){
         this.width = width * scale;
         this.height = height * scale;
     }
 
+    //  Drawing Function //
     @Override
     public void draw(Graphics g, double cameraX, double cameraY, double zoom) {
         if (this.image != null) {
@@ -57,12 +60,4 @@ public class Sprite implements Displayable{
         
     }
 
-    public double getHeight(){
-        return this.height;
-    }
-    public double getWidth(){
-        return this.width;
-    }
-    
-    
 }

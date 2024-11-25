@@ -3,13 +3,17 @@ public enum Direction {
 
     private final int value;
 
-    private Direction(int value) {
+    Direction(int value) {
         this.value = value;
     }
+
+    // Getters //
 
     public int getValue() {
         return value;
     }
+
+    // Setters //
 
     public Direction next(){
         Direction[] values = Direction.values();

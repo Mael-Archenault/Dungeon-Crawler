@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class DynamicSprite extends SolidSprite{
@@ -13,42 +12,44 @@ public class DynamicSprite extends SolidSprite{
         this.speed = 0;
 
     }
-
-    public void moveIfPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList) {
-
-        boolean flag = this.isMovingPossible(framerate,spriteList,figureList);
-        if (flag) {
-            this.move(framerate);
-        }
-
-
-
-    }
-
-    public void update(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
-        this.moveIfPossible(framerate,spriteList,figureList);
-    }
-
-    public void setDirection(Direction direction){
-        this.direction = direction;
-
-    }
+    // Getters //
 
     public Direction getDirection(){
         return this.direction;
     }
 
+    public double getMaxSpeed(){
+        return this.maxSpeed;
+    }
+
+    // Setters //
 
     public void setMaxSpeed(double maxSpeed){
         this.maxSpeed = maxSpeed;
     }
-    public double getSpeed(){return this.speed;}
+    public void setDirection(Direction direction){
+        this.direction = direction;
 
+    }
     public void setSpeed(double speed){
         this.speed = speed;
     }
-    public double getMaxSpeed(){
-        return this.maxSpeed;
+
+
+
+    // update in Game Loop //
+
+    public void update(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
+        this.moveIfPossible(framerate,spriteList,figureList);
+    }
+
+    // Movement Management //
+
+    public void moveIfPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList) {
+        boolean flag = this.isMovingPossible(framerate,spriteList,figureList);
+        if (flag) {
+            this.move(framerate);
+        }
     }
 
     public boolean isMovingPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
@@ -57,8 +58,6 @@ public class DynamicSprite extends SolidSprite{
         int ySave = this.y;
 
         this.move(framerate);
-
-        
         for (Sprite sprite : spriteList){
             if (sprite instanceof SolidSprite){
                 if (this.intersect((SolidSprite)sprite)){
@@ -67,18 +66,16 @@ public class DynamicSprite extends SolidSprite{
                     return false;
                 }
             }
-            
         }
 
         for (Figure figure : figureList){
-            if (figure instanceof SolidSprite && figure!=this){
-                if (this.intersect((SolidSprite)figure)){
+            if (figure!=this){
+                if (this.intersect(figure)){
                     this.x = xSave;
                     this.y = ySave;
                     return false;
                 }
             }
-
         }
 
         if (!Bomb.bombList.isEmpty()) {
@@ -88,18 +85,17 @@ public class DynamicSprite extends SolidSprite{
                     this.y = ySave;
                     return false;
                 }
-
             }
-
         }
+
         this.x = xSave;
         this.y = ySave;
 
-        this.updateHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
+        this.setHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
 
         return true;
 
-    
+
     }
 
     public void move(int framerate){
@@ -132,9 +128,7 @@ public class DynamicSprite extends SolidSprite{
                 this.y -= (int)this.speed/framerate;
                 this.x -= (int)this.speed/framerate;
         }
-        this.updateHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
+        this.setHitbox(this.x+this.HBx, this.y+this.HBy, this.HBwidth, this.HBheight);
     }
-
-
 
 }

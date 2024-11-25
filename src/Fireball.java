@@ -1,12 +1,11 @@
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.awt.geom.AffineTransform;
 
 public class Fireball extends DynamicSprite{
     public static ArrayList<Fireball> fireballList;
+
     Figure originFigure;
 
     double timeCount = 0;
@@ -14,20 +13,16 @@ public class Fireball extends DynamicSprite{
     BufferedImage animationTileSheet;
     BufferedImage explosionTileSheet;
     private int animationIndex;
-    private double explosionTime = 1;
-    private double explosionFramerate = 71/explosionTime;
+
+    private final double explosionTime = 1;
 
     public ArrayList<Figure> damagedFigures;
 
     private String state;
 
-    private int damage = 20;
-
-
 
     public Fireball(Figure originFigure, int HBwidth, int HBheight, double speed) {
         super("./img/fireball.png", (int)(originFigure.x+originFigure.width/2-50), (int)(originFigure.y+originFigure.height/2-50), 100,100, HBwidth, HBheight,(100-HBwidth)/2, (100-HBheight)/2);
-
 
         Fireball.fireballList.add(this);
         this.damagedFigures = new ArrayList<>();
@@ -48,12 +43,28 @@ public class Fireball extends DynamicSprite{
 
         }
 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        catch (Exception ignored) {}
 
 
     }
+
+    // Getters //
+
+    public int getInflictedDamage(){
+        return 20;
+    }
+
+    public String getState(){
+        return this.state;
+    }
+
+    // Setters //
+
+    public void addToDamagedFigures(Figure figure){
+        this.damagedFigures.add(figure);
+    }
+
+    // Updating Position //
 
     @Override
     public boolean isMovingPossible(int framerate, ArrayList<Sprite> spriteList, ArrayList<Figure> figureList){
@@ -71,28 +82,26 @@ public class Fireball extends DynamicSprite{
                 this.setSpeed(0);
                 this.timeCount = 0;
             }
-
-
         }
 
         if(this.state.equals("exploding")&&this.timeCount>=this.explosionTime){
             this.state = "exploded";
 
         }
-
-
-
         return flag;
     }
 
+    // Updating animation //
+
     public void animationUpdate(){
         int currentAnimationIndex = 0;
+        double explosionFramerate = 71 / explosionTime;
         switch (this.state){
             case "moving":
                 currentAnimationIndex = (int)(this.timeCount*this.animationFramerate)%60;
                 break;
             case "exploding":
-                currentAnimationIndex = Math.min(70,(int)(this.timeCount*this.explosionFramerate));
+                currentAnimationIndex = Math.min(70,(int)(this.timeCount* explosionFramerate));
         }
 
 
@@ -115,18 +124,6 @@ public class Fireball extends DynamicSprite{
         }
 
 
-    }
-
-    public String getState(){
-        return this.state;
-    }
-
-    public void addToDamagedFigures(Figure figure){
-        this.damagedFigures.add(figure);
-    }
-
-    public int getDamage(){
-        return this.damage;
     }
 
 }

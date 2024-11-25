@@ -57,9 +57,9 @@ public class App{
 
         int mapSize = 10;
         int enemyNumber = 10;
-        RandomPlayground level1 = new RandomPlayground("./data/tileGroupRepertory2.txt", mapSize);
-        level1.setTileWidth(200);
-        ArrayList<Sprite> levelSpriteList = level1.getSpriteList();
+        RandomPlayground map = new RandomPlayground("./data/tileGroupRepertory.txt", mapSize);
+
+        ArrayList<Sprite> levelSpriteList = map.getSpriteList();
         physicsEngine.setEnvironment(levelSpriteList);
 
         for(Displayable displayable : levelSpriteList){
@@ -110,6 +110,7 @@ public class App{
     }
 
     public void startBossFight() {
+
         Bomb.bombList = new ArrayList<Bomb>();
         Fireball.fireballList = new ArrayList<Fireball>();
         ZoomBox.zoomBoxeList = new ArrayList<ZoomBox>();
@@ -127,8 +128,7 @@ public class App{
 
         renderEngine.addKeyListener(gameEngine);
 
-        Playground map = new Playground("./data/level1.txt");
-        map.setTileWidth(200);
+        Playground map = new Playground("./data/bossMap.txt");
         ArrayList<Sprite> levelSpriteList = map.getSpriteList();
 
         physicsEngine.setEnvironment(levelSpriteList);
@@ -147,6 +147,7 @@ public class App{
 
         ZoomBox dezooomBox = new ZoomBox(6*200,6*200,13*200,13*200);
         renderEngine.addToRenderList(dezooomBox);
+
 
         Timer gameLoop = new Timer(1000 / framerate, (time)->{
             gameEngine.update(framerate);

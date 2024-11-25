@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -10,28 +9,24 @@ import javax.imageio.ImageIO;
 public class Bomb extends SolidSprite{
     public static ArrayList<Bomb> bombList;
     private double timeCount;
-    private double lifetime;
-    private double animationFramerate;
-    private double explosionDuration;
-    private double explosionMaxRange = 200;
+    private final double lifetime;
+    private final double animationFramerate;
+    private final double explosionDuration;
+    private final double explosionMaxRange = 200;
     private int animationIndex;
 
-    private ArrayList<Integer> explosionHitboxSizes;
+    private final ArrayList<Integer> explosionHitboxSizes;
 
     public ArrayList<Figure> damagedFigures;
 
-    private Figure originFigure;
 
-
-    private final String explosionFilePath = "./img/explosion.png";
     private BufferedImage animationTileSheet;
 
     private String state;
     
 
-    public Bomb(Figure originFigure, int x, int y){
+    public Bomb(int x, int y){
         super("./img/bomb.png", x, y,50,50, 30,30,10,15);
-        this.originFigure = originFigure;
         Bomb.bombList.add(this);
         this.lifetime = 3;
         this.timeCount = 0;
@@ -39,21 +34,20 @@ public class Bomb extends SolidSprite{
         this.animationFramerate = 13/this.explosionDuration;
         this.animationIndex = 0;
 
-        this.explosionHitboxSizes = new ArrayList<Integer>(Arrays.asList(20,30,50,50,90,100,100,100,100,90,85,80,60)); // these values are adapted for explosionMaxRange = 130
+        this.explosionHitboxSizes = new ArrayList<>(Arrays.asList(20,30,50,50,90,100,100,100,100,90,85,80,60)); // these values are adapted for explosionMaxRange = 130
         this.explosionHitboxSizes.replaceAll(n -> (int)(n *(explosionMaxRange/130)));
 
         this.damagedFigures = new ArrayList<>();
         this.state = "idle";
 
         try {
-            
+
+            String explosionFilePath = "./img/explosion.png";
             this.animationTileSheet = ImageIO.read(new File(explosionFilePath));
 
         }
 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        catch (Exception ignored) {}
 
     }
 
@@ -103,7 +97,7 @@ public class Bomb extends SolidSprite{
         this.image = this.animationTileSheet.getSubimage(64*this.animationIndex,0, 64,64);
         double newX = this.x + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
         double newY = this.y + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
-        this.updateHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
+        this.setHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
     }
 
     public void animationUpdate(){
@@ -114,7 +108,7 @@ public class Bomb extends SolidSprite{
             this.image = this.animationTileSheet.getSubimage(64*this.animationIndex,0, 64,64);
             double newX = this.x + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
             double newY = this.y + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
-            this.updateHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
+            this.setHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
         }
 
 
