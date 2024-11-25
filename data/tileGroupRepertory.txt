@@ -1,0 +1,86 @@
+numberOfGroups:8
+tilesPerGroup:9
+
+Adjacency possibilities
+0:
+right:0,1,2,3,4,5
+down:0,1,2,3,4,5
+1:
+right:2,3,4
+down:2,4
+2:
+right:1,5
+down:1,2,4
+3:
+right:2,4
+down:3,5
+4:
+right:2,3,4
+down:1,2,4
+5:
+right:1,5
+down:3,5
+6:
+right:0,2,3,4
+down:0,7
+7:
+right:0,2,3,4
+down:0,1,2,4
+
+////
+0:
+
+
+
+
+
+////
+1:
+
+TTT
+T
+TRR
+
+////
+2:
+
+TTT
+  R
+TTT
+
+////
+3:
+
+T R
+
+T T
+
+////
+4:
+
+TTR
+
+TTR
+
+////
+5:
+
+R T
+T T
+T T
+
+////
+6:
+
+TTT
+
+
+
+////
+7:
+
+
+
+TTT
+
+////

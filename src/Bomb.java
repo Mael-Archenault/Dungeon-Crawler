@@ -51,11 +51,41 @@ public class Bomb extends SolidSprite{
 
     }
 
+    // Getters //
+
+    public boolean isExploding(){
+        return this.state.equals("exploding");
+    }
+    public String getState(){
+        return this.state;
+    }
+
+    // Setters //
+
+    public void addToDamagedFigures(Figure figure){
+        this.damagedFigures.add(figure);
+    }
+
+
+    public void trigger(){ // A function to early trigger the bomb
+        this.timeCount = 0;
+        this.x = (int)(this.x + this.width/2-this.explosionMaxRange/2);
+        this.y = (int)(this.y + this.height/2 - this.explosionMaxRange/2);
+
+        this.width = this.explosionMaxRange;
+        this.height = this.explosionMaxRange;
+
+        this.image = this.animationTileSheet.getSubimage(64*this.animationIndex,0, 64,64);
+        double newX = this.x + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
+        double newY = this.y + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
+        this.setHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
+    }
+
+    // Updating in Game Loop //
+
     public void update(int framerate){
         
         this.timeCount += (double)1/framerate;
-
-
 
         if (this.timeCount >= this.lifetime && !this.isExploding()){
             this.trigger();
@@ -74,31 +104,11 @@ public class Bomb extends SolidSprite{
             }
             if (this.timeCount >= this.explosionDuration && !this.state.equals("exploded")){
                 this.state = "exploded";
-
-
             }
         }
-
     }
 
-
-    public boolean isExploding(){
-       return this.state.equals("exploding");
-    }
-
-    public void trigger(){
-        this.timeCount = 0;
-        this.x = (int)(this.x + this.width/2-this.explosionMaxRange/2);
-        this.y = (int)(this.y + this.height/2 - this.explosionMaxRange/2);
-
-        this.width = this.explosionMaxRange;
-        this.height = this.explosionMaxRange;
-
-        this.image = this.animationTileSheet.getSubimage(64*this.animationIndex,0, 64,64);
-        double newX = this.x + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
-        double newY = this.y + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
-        this.setHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
-    }
+    // Update animation //
 
     public void animationUpdate(){
         int currentAnimationIndex = Math.min(12,(int)(this.timeCount*this.animationFramerate));
@@ -110,14 +120,5 @@ public class Bomb extends SolidSprite{
             double newY = this.y + (this.explosionMaxRange- this.explosionHitboxSizes.get(this.animationIndex))/2;
             this.setHitbox(newX, newY, explosionHitboxSizes.get(this.animationIndex), explosionHitboxSizes.get(this.animationIndex));
         }
-
-
-    }
-
-    public void addToDamagedFigures(Figure figure){
-        this.damagedFigures.add(figure);
-    }
-    public String getState(){
-        return this.state;
     }
 }

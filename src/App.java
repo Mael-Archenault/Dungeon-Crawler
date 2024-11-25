@@ -1,16 +1,11 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.Random;
-import java.util.TimerTask;
 import javax.swing.JPanel;
-
 import static java.lang.Integer.parseInt;
 
 public class App{
@@ -33,15 +28,15 @@ public class App{
         this.frame.setResizable(false);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         App app = new App();
         app.startMenu();
     }
 
     public void startRandomMapGame() {
-        Bomb.bombList = new ArrayList<Bomb>();
-        Fireball.fireballList = new ArrayList<Fireball>();
-        ZoomBox.zoomBoxeList = new ArrayList<ZoomBox>();
+        Bomb.bombList = new ArrayList<>();
+        Fireball.fireballList = new ArrayList<>();
+        ZoomBox.zoomBoxeList = new ArrayList<>();
 
         Figure hero =new Figure("./img/heroTileSheetWithSword.png", 5*3*200  +200+ 75 ,5*3*200 +200 + 75, 100,100,70,100,15, 0);
         hero.rescale(0.75);
@@ -111,9 +106,9 @@ public class App{
 
     public void startBossFight() {
 
-        Bomb.bombList = new ArrayList<Bomb>();
-        Fireball.fireballList = new ArrayList<Fireball>();
-        ZoomBox.zoomBoxeList = new ArrayList<ZoomBox>();
+        Bomb.bombList = new ArrayList<>();
+        Fireball.fireballList = new ArrayList<>();
+        ZoomBox.zoomBoxeList = new ArrayList<>();
 
         Figure hero =new Figure("./img/heroTileSheetWithSword.png", 4*200 + 75,9*200+75, 100,100,70,100,15, 0);
         hero.rescale(0.75);
@@ -239,31 +234,25 @@ public class App{
 
             this.frame.add(menu);
 
-            randomMapButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    frame.remove(menu);
-                    framerate = parseInt(framerateBox.getText());
-                    System.out.println("framerate = "+ framerate);
-                    startRandomMapGame();
-                }
+            randomMapButton.addActionListener(e -> {
+                frame.remove(menu);
+                framerate = parseInt(framerateBox.getText());
+                System.out.println("framerate = "+ framerate);
+                startRandomMapGame();
             });
 
-            bossButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    frame.remove(menu);
-                    framerate = parseInt(framerateBox.getText());
-                    System.out.println("framerate = "+ framerate);
-                    startBossFight();
-                }
+            bossButton.addActionListener(e -> {
+                frame.remove(menu);
+                framerate = parseInt(framerateBox.getText());
+                System.out.println("framerate = "+ framerate);
+                startBossFight();
             });
             menu.setVisible(true);
             frame.add(menu);
             frame.revalidate();
             frame.repaint();
         }
-        catch (Exception e){}
+        catch (Exception ignored){}
 
     }
 
