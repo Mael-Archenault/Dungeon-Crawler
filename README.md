@@ -4,7 +4,7 @@ CONTEXT : I created the base of the project choosing the "Super Sayian" path. In
     code are a bit different with what was on the Github of Mr. Tauvel.
 
 ADDED FEATURES :
-- by pressing two directions keys, the player is able to move diagonally, without even getting a speed boost (general speed is conserved but diagonally).
+- by pressing two directions keys, the player is able to move diagonally
 
 - debugging tool : pressing H will show the hitbox of every SolidSprite. Press again to make them disappear
 
@@ -18,4 +18,4 @@ ADDED FEATURES :
 
 - added enemy patterns. The enemy has a list of point it had to visit. At each point, it settles for a short moment, then go to the next point. The bot is able to avoid solid obstacles. When the player arrives in its vision field or attack it, the bot targets the player to attack him. If the distance is to big, the target is lost.
    
-- 
+- added a mode to generate a random map procedurally. The method used is called "wave function collapsing"
