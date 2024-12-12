@@ -38,7 +38,7 @@ This repository is what I came up with.
 
 ### Menu
 
-- added a start menu with one mode to choose among two
+- added a start menu with one mode to choose among two (obviously I'm not a graphic designer, but it works)
 
 ### Modes
 
