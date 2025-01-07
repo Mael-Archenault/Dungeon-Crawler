@@ -1,7 +1,7 @@
 # Dungeon Crawler
 
 ## Context
-One of my school project consisted in creating a Dungeon Crawler game using Object-Oriented Programming on Java.
+One of my school project consisted in creating a Dungeon Crawler game using Object-Oriented Programming with Java.
 
 The course made us build the base of the Dungeon Crawler. In the aftermath we were given some hours to add improvements and special features to our games.
 This repository is what I came up with.
