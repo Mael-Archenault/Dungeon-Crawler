@@ -21,7 +21,7 @@ This repository is what I came up with.
 
 ### Enemies
 
-- added enemy patterns. The enemy has a list of point it had to visit. At each point, it settles for a short moment, then go to the next point. The bot is able to avoid solid obstacles
+- added enemy patterns. The enemy has a list of point it has to visit. At each point, it settles for a short moment, then go to the next point. The bot is able to avoid solid obstacles
 
 - when the player enters in the vision field of the bot or attack it, the bot targets the player to attack him. If the distance is to big, the target is lost.
 
